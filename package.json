@@ -1,0 +1,17 @@
+{
+  "name": "twitch-obs-scene-changer",
+  "version": "1.0.0",
+  "description": "Connects to a Twitch chat and listens to command to switch scene from broadcaster and/or moderators.",
+  "main": "app.js",
+  "scripts": {
+    "test": "",
+    "start": "node app.js"
+  },
+  "author": "Pawters",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^6.1.0",
+    "obs-websocket-js": "^1.2.0",
+    "twitch-js": "^1.2.15"
+  }
+}
