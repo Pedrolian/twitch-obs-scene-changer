@@ -7,6 +7,9 @@ const obs = new OBSWebSocket();
 let obsScenes = [],
     obsScenesOriginalName = [];
 
+// Command
+const COMMAND_NAME = "!scene"; // Command to type in chat.
+
 // Check .env 
 if(process.env.TWITCH_CHANNEL === "") {
   console.error(`You must enter a Twitch channel.`);
@@ -39,7 +42,7 @@ client.on('chat', (channel, userstate, message, self) => {
   // Is user that's posting a mod or broadcaster?
   if(userstate.badges != null && userstate.badges.hasOwnProperty("broadcaster") && userstate.badges.broadcaster === '1' || userstate.mod === true) {
     message = message.toLowerCase();
-    if(message.indexOf(process.env.COMMAND) === 0) { // sent !scene command
+    if(message.indexOf(COMMAND_NAME) === 0) { // sent !scene command
       message = message.split(" ");
       if(message.length > 1) { // sent which scene to switch to
         message.shift();
