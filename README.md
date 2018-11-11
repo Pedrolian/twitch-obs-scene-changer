@@ -47,7 +47,12 @@ obs.setCurrentScene({'scene-name': `HD Cam`}); // Scene name in OBS (case-sensit
 obs.setCurrentScene({'scene-name': `SD Cam`}); // Scene name in OBS (case-sensitive)
 ```
 
-Run npm start to start the script
+To run dynamic.js in cmd promt / terminal
 ```
-npm start
+node dynamic.js
+```
+
+To run manual.js in cmd promt / terminal
+```
+node manual.js
 ```
