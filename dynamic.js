@@ -16,6 +16,10 @@ if(process.env.TWITCH_CHANNEL === "") {
   process.exit();
 }
 
+// Command cooldown
+const COMMAND_COOLDOWN = Number(process.env.COMMAND_COOLDOWN);
+let commandLastUsed = 0;
+
 // Connect to OBS
 obs.connect({ address: process.env.OBS_URL, password: process.env.OBS_PASSWORD })
   .then(() => {
@@ -40,17 +44,20 @@ const client = new Twitch.client({
 client.on('chat', (channel, userstate, message, self) => {
 
   // Is user that's posting a mod or broadcaster?
-  if(userstate.badges != null && userstate.badges.hasOwnProperty("broadcaster") && userstate.badges.broadcaster === '1' || userstate.mod === true) {
-    message = message.toLowerCase();
-    if(message.indexOf(COMMAND_NAME) === 0) { // sent !scene command
-      message = message.split(" ");
-      if(message.length > 1) { // sent which scene to switch to
-        message.shift();
-        message = message.join(" ");
-        if(obsScenes.indexOf(message) >= 0 ) { // scene with name exists, switch to it.
-          const sceneName = obsScenesOriginalName[obsScenes.indexOf(message)];
-          obs.setCurrentScene({'scene-name': sceneName});
-          console.log(`[OBS] (log): Switching to scene: ${sceneName}, command sent from ${userstate.username}.`);
+  if(Math.round((new Date()).getTime() / 1000) > commandLastUsed + COMMAND_COOLDOWN) {
+    if(userstate.badges != null && userstate.badges.hasOwnProperty("broadcaster") && userstate.badges.broadcaster === '1' || userstate.mod === true) {
+      message = message.toLowerCase();
+      if(message.indexOf(COMMAND_NAME) === 0) { // sent !scene command
+        message = message.split(" ");
+        if(message.length > 1) { // sent which scene to switch to
+          message.shift();
+          message = message.join(" ");
+          if(obsScenes.indexOf(message) >= 0 ) { // scene with name exists, switch to it.
+            const sceneName = obsScenesOriginalName[obsScenes.indexOf(message)];
+            obs.setCurrentScene({'scene-name': sceneName});
+            console.log(`[OBS] (log): Switching to scene: ${sceneName}, command sent from ${userstate.username}.`);
+            commandLastUsed = Math.round((new Date()).getTime() / 1000);
+          }
         }
       }
     }
